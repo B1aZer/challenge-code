@@ -1,0 +1,39 @@
+# alertmanager.yml
+
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'email_sms'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+
+receivers:
+  - name: 'email_sms'
+    email_configs:
+      - to: 'your_email@example.com'
+        from: 'alertmanager@example.com'
+        smarthost: 'smtp.example.com:587'
+        auth_username: 'your_smtp_username'
+        auth_password: 'your_smtp_password'
+    webhook_configs:
+      - url: 'https://api.twilio.com/2010-04-01/Accounts/your_account_sid/Messages.json'
+        send_resolved: true
+        http_config:
+          basic_auth:
+            username: 'your_account_sid'
+            password: 'your_auth_token'
+        headers:
+          Content-Type: application/x-www-form-urlencoded
+        # Message body format for Twilio
+        http_config:
+          basic_auth:
+            username: 'your_account_sid'
+            password: 'your_auth_token'
+        headers:
+          Content-Type: application/x-www-form-urlencoded
+        params:
+          To: '+1234567890'  # Your phone number
+          From: '+0987654321'  # Your Twilio phone number
+          Body: 'Alert: {{ .CommonAnnotations.summary }} - {{ .CommonAnnotations.description }}'
