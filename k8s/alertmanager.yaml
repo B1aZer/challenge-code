@@ -1,4 +1,4 @@
-# alertmanager.yml
+# alertmanager.yaml
 
 global:
   resolve_timeout: 5m
