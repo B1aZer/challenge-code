@@ -68,6 +68,18 @@ class TestHelloWorldApp(unittest.TestCase):
         expected_message = {"message": f"Hello, johndoe! Happy birthday!"}
         self.assertEqual(response.json, expected_message)
 
+    def test_get_user_birthday_today_5_years(self):
+        today_date_5y_age = datetime.now().replace(year=2019).strftime('%Y-%m-%d')
+        response = self.client.put('/hello/johndoe',
+                        data=json.dumps({"dateOfBirth": today_date_5y_age}),
+                        content_type='application/json')
+        self.assertEqual(response.status_code, 204)
+
+        response = self.client.get('/hello/johndoe')
+        self.assertEqual(response.status_code, 200)
+        expected_message = {"message": f"Hello, johndoe! Happy birthday!"}
+        self.assertEqual(response.json, expected_message)
+
     def test_get_user_birthday_in_future(self):
         future_birthday = (datetime.now() - timedelta(days=359)).strftime('%Y-%m-%d')
         self.client.put('/hello/johndoe',

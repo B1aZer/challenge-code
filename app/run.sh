@@ -1,1 +1,1 @@
-./bin/python3 app.py
+../bin/python3 app.py
